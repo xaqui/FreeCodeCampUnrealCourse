@@ -10,7 +10,7 @@
  * 
  */
 
-// class ABall
+class ABall;
 
 UCLASS()
 class ARKANOID_API APaddlePlayerController : public APlayerController
@@ -29,5 +29,18 @@ protected:
 	void MoveHorizontal(float AxisValue);
 
 	// ball references
+
+	void Launch();
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<ABall> BallObj;
+	ABall* MyBall;
+	FVector SpawnLocation = FVector(10.0f, 0.0f, 40.0f);
+	FRotator SpawnRotation = FRotator(0.0f, 0.0f, 0.0f);
+	FActorSpawnParameters SpawnInfo;
+
+
+public:
+	void SpawnNewBall();
 
 };

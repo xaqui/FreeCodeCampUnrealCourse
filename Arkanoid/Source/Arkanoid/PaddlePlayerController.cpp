@@ -5,7 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraActor.h"
 #include "Paddle.h"
-//#include "Ball.h"
+#include "Ball.h"
 
 APaddle* Paddle_P;
 
@@ -19,6 +19,7 @@ void APaddlePlayerController::SetupInputComponent()
 
 	EnableInput(this);
 	InputComponent->BindAxis("MoveHorizontal", this, &APaddlePlayerController::MoveHorizontal);
+	InputComponent->BindAction("Launch",IE_Pressed, this, &APaddlePlayerController::Launch );
 
 }
 
@@ -30,6 +31,8 @@ void APaddlePlayerController::BeginPlay()
 	FViewTargetTransitionParams Params;
 	SetViewTarget(CameraActors[0], Params);
 	Paddle_P = Cast<APaddle>(GetPawn());
+
+	SpawnNewBall();
 }
 
 void APaddlePlayerController::MoveHorizontal(float AxisValue)
@@ -37,4 +40,22 @@ void APaddlePlayerController::MoveHorizontal(float AxisValue)
 	if (Paddle_P!=nullptr) {
 		Paddle_P->MoveHorizontal(AxisValue);
 	}
+}
+
+void APaddlePlayerController::Launch()
+{
+	if (MyBall != nullptr) {
+		MyBall->Launch();
+	}
+}
+
+void APaddlePlayerController::SpawnNewBall()
+{
+	if (!MyBall) {
+		MyBall = nullptr;
+	}
+	if (BallObj) {
+		MyBall = GetWorld()->SpawnActor<ABall>(BallObj, SpawnLocation, SpawnRotation, SpawnInfo);
+	}
+
 }

@@ -12,25 +12,29 @@ APaddle::APaddle()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SM_Paddle = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SM Paddle"));
-	RootComponent = SM_Paddle;
+	//RootComponent = SM_Paddle;
 
+	if (RootComponent){
+		SM_Paddle->SetupAttachment(RootComponent);
+	}
 
-	
+	SM_Paddle->SetEnableGravity(false);
+
+	//These lines crash UE5 5.0.3 Editor on Startup (is this a bug?) Set these from the blueprint editor instead :)
+	//SM_Paddle->SetConstraintMode(EDOFMode::XZPlane);
+	//SM_Paddle->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	//SM_Paddle->SetCollisionProfileName(TEXT("PhysicsActor"));
+
 	FloatingMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("Floating Pawn Movement"));
-
-
-
 }
 
 // Called when the game starts or when spawned
 void APaddle::BeginPlay()
 {
 	Super::BeginPlay();
-	SM_Paddle->SetEnableGravity(false);
-	SM_Paddle->SetConstraintMode(EDOFMode::XZPlane);
-	SM_Paddle->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-	SM_Paddle->SetCollisionProfileName(TEXT("PhysicsActor"));
+
 }
+
 
 // Called every frame
 void APaddle::Tick(float DeltaTime)
@@ -38,6 +42,7 @@ void APaddle::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
 
 // Called to bind functionality to input
 void APaddle::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
